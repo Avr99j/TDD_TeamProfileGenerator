@@ -13,4 +13,5 @@ class Manager extends Employee {
     }
 }
 
+// Exporting the Manager class
 module.extends = Manager;
