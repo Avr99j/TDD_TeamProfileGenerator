@@ -5,5 +5,14 @@
   },
   "scripts": {
     "test": "jest"
-  }
+  },
+  "name": "starter",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
