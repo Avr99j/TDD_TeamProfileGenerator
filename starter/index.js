@@ -1,135 +1,154 @@
+const inquirer = require("inquirer");
+const fs = require("fs");
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
-const inquirer = require("inquirer");
-const path = require("path");
-const fs = require("fs");
+const render = require("./src/page-template");
 
-const OUTPUT_DIR = path.resolve(__dirname, "output");
-const outputPath = path.join(OUTPUT_DIR, "team.html");
+const teamMembers = [];
 
-const render = require("./src/page-template.js");
+// Function to gather information about the team manager
+function promptManager() {
+    return inquirer.prompt([
+        {
+            type: "input",
+            name: "name",
+            message: "Enter the team manager's name:",
+        },
+        {
+            type: "input",
+            name: "id",
+            message: "Enter the team manager's employee ID:",
+        },
+        {
+            type: "input",
+            name: "email",
+            message: "Enter the team manager's email address:",
+        },
+        {
+            type: "input",
+            name: "officeNumber",
+            message: "Enter the team manager's office number:",
+        },
+    ]);
+}
 
-// // TODO: Write Code to gather information about the development team members, and render the HTML file.
-
-// // Write a .prompt function for command line prompts
-// // .then answers to read the answers to the prompt and render it in the team.html file. Use page-template.js file as the functions for rendering are already provided. - use render function
-// // Create an output folder to save the team.html file -- use outputPath variable
-
-// Function to prompt Engineeer's information
+// Function to prompt for engineer's information
 function promptEngineer() {
     return inquirer.prompt([
         {
             type: "input",
-            name: "engineerName",
-            message: "Please enter the engineer's name: "
+            name: "name",
+            message: "Enter the engineer's name:",
         },
         {
             type: "input",
-            name: "engineerId",
-            message: "Please enter the Engineer's ID: ",
+            name: "id",
+            message: "Enter the engineer's employee ID:",
         },
         {
             type: "input",
-            name: "engineerEmail",
-            message: "Please enter the Engineer's email: ",
+            name: "email",
+            message: "Enter the engineer's email address:",
         },
         {
             type: "input",
-            name: "gitHub",
-            message: "Please enter the Engineer's GitHub Username: ",
+            name: "github",
+            message: "Enter the engineer's GitHub username:",
         },
     ]);
 }
 
-// Function to prompt Intern's information
+// Function to prompt for intern's information
 function promptIntern() {
     return inquirer.prompt([
         {
             type: "input",
-            name: "internName",
-            message: "Please enter the intern's name: ",
+            name: "name",
+            message: "Enter the intern's name:",
         },
         {
             type: "input",
-            name: "internId",
-            message: "Please enter the intern's ID: ",
+            name: "id",
+            message: "Enter the intern's employee ID:",
         },
         {
             type: "input",
-            name: "internEmail",
-            message: "Please enter the intern's email: ",
+            name: "email",
+            message: "Enter the intern's email address:",
         },
         {
             type: "input",
-            name: "internSchool",
-            message: "Please enter the intern's school: ",
+            name: "school",
+            message: "Enter the intern's school:",
         },
     ]);
 }
 
-// Function to prompt next action
+// Function to prompt for next action
 function promptNextAction() {
-    return inquirer.prompt([
-        {
-            type: "rawlist",
-            name: "chooseOption",
-            choices: ['Add an engineer', 'Add an intern', 'Finish building the team'],
-            Message: "Please choose an option to take the appropriate next steps",
-        },
-    ]);
+    return inquirer.prompt({
+        type: "list",
+        name: "action",
+        message: "Choose an option:",
+        choices: ["Add an engineer", "Add an intern", "Finish building the team"],
+    });
 }
 
-// Initial prompt to gather information
-inquirer.prompt([
-    {
+// Function to add a manager to the team
+async function addManager() {
+    console.log("Please enter the team manager's information:");
+    const managerData = await promptManager();
+    const manager = new Manager(managerData.name, managerData.id, managerData.email, managerData.officeNumber);
+    teamMembers.push(manager);
+    console.log("Team manager added successfully!\n");
+}
 
-        type: "input",
-        name: "managerName",
-        message: "Please enter the team Manager's name: ",
-    },
-    {
-        type: "input",
-        name: "employeeId",
-        message: "Please enter your Employee ID: ",
-    },
-    {
-        type: "input",
-        name: "emailAddress",
-        message: "Please enter your Email Address: ",
-    },
-    {
-        type: "input",
-        name: "officeNumber",
-        message: "Please enter your Office Number: ",
-    },
-])
+// Function to add an engineer to the team
+async function addEngineer() {
+    console.log("Please enter the engineer's information:");
+    const engineerData = await promptEngineer();
+    const engineer = new Engineer(engineerData.name, engineerData.id, engineerData.email, engineerData.github);
+    teamMembers.push(engineer);
+    console.log("Engineer added successfully!\n");
+}
 
-    .then(async (managerAnswers) => {
-        teamMembers = [];
+// Function to add an intern to the team
+async function addIntern() {
+    console.log("Please enter the intern's information:");
+    const internData = await promptIntern();
+    const intern = new Intern(internData.name, internData.id, internData.email, internData.school);
+    teamMembers.push(intern);
+    console.log("Intern added successfully!\n");
+}
 
-        while (true) {
+// Function to gather information about the team
+async function gatherTeamInfo() {
+    await addManager();
 
-            const { chosenOption } = await promptNextAction();
-            // nextAction = chosenOption;
-            if (chosenOption === 'Finish building the team') {
-                break; // Exit the loop if user chooses to finish
-            }
+    let nextAction = await promptNextAction();
 
-            if (chosenOption === 'Add an engineer') {
-                const engineerAnswers = await promptEngineer();
-                teamMembers.push(engineerAnswers);
-
-            } else if (chosenOption === 'Add an intern') {
-                const internAnswers = await promptIntern();
-                teamMembers.push(internAnswers);
-
-            }
-
-            console.log(teamMembers)
+    while (nextAction.action !== "Finish building the team") {
+        switch (nextAction.action) {
+            case "Add an engineer":
+                await addEngineer();
+                break;
+            case "Add an intern":
+                await addIntern();
+                break;
         }
-    })
+        nextAction = await promptNextAction();
+    }
 
+    // Generate HTML using the render function
+    const html = render(teamMembers);
 
+    // Write HTML to team.html file
+    const outputPath = "./output/team.html";
+    fs.writeFileSync(outputPath, html);
 
-// The above loop is not breaking, work on it
+    console.log(`\nTeam information has been successfully written to ${outputPath}`);
+}
+
+// Call the function to start gathering team information
+gatherTeamInfo();
