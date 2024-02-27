@@ -15,4 +15,6 @@ class Engineer extends Employee {
     }
 }
 
+// Exports the Engineer class
+
 module.exports = Engineer;

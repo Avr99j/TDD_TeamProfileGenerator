@@ -22,4 +22,6 @@ class Employee {
     }
 }
 
+// Exports the Employee class
+
 module.exports = Employee;
