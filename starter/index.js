@@ -103,4 +103,33 @@ inquirer.prompt([
         name: "officeNumber",
         message: "Please enter your Office Number: ",
     },
-]);
+])
+
+    .then(async (managerAnswers) => {
+        teamMembers = [];
+
+        while (true) {
+
+            const { chosenOption } = await promptNextAction();
+            // nextAction = chosenOption;
+            if (chosenOption === 'Finish building the team') {
+                break; // Exit the loop if user chooses to finish
+            }
+
+            if (chosenOption === 'Add an engineer') {
+                const engineerAnswers = await promptEngineer();
+                teamMembers.push(engineerAnswers);
+
+            } else if (chosenOption === 'Add an intern') {
+                const internAnswers = await promptIntern();
+                teamMembers.push(internAnswers);
+
+            }
+
+            console.log(teamMembers)
+        }
+    })
+
+
+
+// The above loop is not breaking, work on it
