@@ -1,6 +1,5 @@
 # Team Profile Generator
 
-![Team Profile Generator](team-profile-generator.png)
 
 ## Description
 
@@ -25,6 +24,7 @@ To install the Team Profile Generator, follow these steps:
 
 ## Screenshot
 
+![image](https://github.com/Avr99j/TDD_TeamProfileGenerator/assets/71075582/06b3ddf6-5b06-43c7-89bc-7d9a783db65e)
 
 
 ## Usage
@@ -37,8 +37,6 @@ To use the Team Profile Generator, follow these steps:
 4. Once all team members are added, select the option to finish building the team.
 5. The application will generate an HTML file named `team.html` in the `output` directory.
 6. Open `team.html` in a web browser to view the generated team profile webpage.
-
-![Usage Example](usage-example.gif)
 
 ## Features
 
